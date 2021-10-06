@@ -6,14 +6,25 @@ function [Ydq] = Ydq_extract(base, branch, V0, omega0, V_p, omega_grid)
     % V_p: per unit perurbation voltage amplitude
     % omega_grid: per unit frequency sampling points
     
-    % TODO: add operating point settings, such as voltage, synch. freq.,
-    % perturbation amplitude
+    parts = split(branch.type, '_');
+    if strcmp(parts{1}, 'branch')
+        is_branch = true;
+    elseif strcmp(parts{1}, 'device')
+        is_branch = false;
+    else
+        error('Invalid branch/device ID');
+    end
+    
     
     % add branch block and set parameters
     close_system('Ydq_extract_model',0);
     load_system('Ydq_extract_model');
     
-    branch_lib_name = strcat('branch_library/', branch.type);
+    if is_branch
+        branch_lib_name = strcat('branch_library/', branch.type);
+    else
+        branch_lib_name = strcat('device_library/', branch.type);
+    end
     branch_name = 'Ydq_extract_model/branch';
     
     branch_setup_name = strcat(branch.type, '_setup');
@@ -34,13 +45,20 @@ function [Ydq] = Ydq_extract(base, branch, V0, omega0, V_p, omega_grid)
     set_param('Ydq_extract_model/branch', 'position', pos_branch);
     
     meas_RConn = get_param('Ydq_extract_model/meas', 'PortHandles').RConn;
+    
     branch_LConn = get_param('Ydq_extract_model/branch', 'PortHandles').LConn;
-    branch_RConn = get_param('Ydq_extract_model/branch', 'PortHandles').RConn;
+    if is_branch
+        branch_RConn = get_param('Ydq_extract_model/branch', 'PortHandles').RConn;
+    end
+    
     gnd_Conn = get_param('Ydq_extract_model/gnd', 'PortHandles').LConn;
     
     for k = 1:3
         add_line('Ydq_extract_model', meas_RConn(k), branch_LConn(k));
-        add_line('Ydq_extract_model', branch_RConn(k), gnd_Conn);
+        
+        if is_branch
+            add_line('Ydq_extract_model', branch_RConn(k), gnd_Conn);
+        end
     end
     
     % save as temp model
