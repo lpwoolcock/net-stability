@@ -3,7 +3,7 @@ function [mpc] = mpc_gen(base, branches, devices)
 
     buses = [];
 
-    % find all the branch numbers, exclude 0 (slack bus/inf grid) and -1
+    % find all the branch bus numbers, exclude 0 (slack bus/inf grid) and -1
     % (gnd)
     for branch = branches
         if branch.bus1 > 0 && isempty(find(buses == branch.bus1, 1))
