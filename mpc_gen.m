@@ -1,4 +1,4 @@
-function [mpc] = mpc_gen(base, branches, devices)
+function [mpc] = mpc_gen(base, Vg, branches, devices)
     mpc.baseMVA = base.S / 1e6;
 
     buses = [];
@@ -104,7 +104,7 @@ function [mpc] = mpc_gen(base, branches, devices)
     mpc.gen(end,1) = slack;
     mpc.gen(end,4) = 1e6; % Q limits, i don't know if you can just set these to 0?
     mpc.gen(end,5) = -1e6;
-    mpc.gen(end,6) = 1.0; % slack bus voltage mag. i don't know if we would ever want to change this?
+    mpc.gen(end,6) = Vg;
     mpc.gen(end,8) = 1; % in service
     mpc.gen(end,9) = 1e6; % P limits
     mpc.gen(end,10) = -1e6;
