@@ -104,7 +104,7 @@ function [Ydq] = Ydq_noise(base, branch, V0, omega0, V_p, omega_grid, t_meas)
     delta_omega_grid = omega_grid(2) - omega_grid(1); % note only uniform frequency sampling is allowed
     delta_omega_fft = omega_fft(2) - omega_fft(1);
 
-    R = delta_omega_fft / delta_omega_grid;
+    R = 0.2 * delta_omega_fft / delta_omega_grid;
 
     % choice of filter cutoff is compromise. choosing R allows some
     % aliasing/leakage, choosing low oversmooths

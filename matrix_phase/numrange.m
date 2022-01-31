@@ -1,4 +1,4 @@
-function [xCx] = numrange(C, n)
+function [xCx, x] = numrange(C, n)
     
     m = length(C);
     x = complex(randn(m, n), randn(m, n));
