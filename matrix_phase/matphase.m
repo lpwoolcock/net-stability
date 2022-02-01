@@ -3,7 +3,7 @@ function phi = matphase(C)
     if isnan(z)
         phi = nan;
     else
-        phi = wrapToPi(accrphase(z*C) - angle(z));
+        phi = sort(wrapToPi(accrphase(z*C) - angle(z)), 'descend');
     end
 end
 
