@@ -26,6 +26,8 @@ function [] = device_PLLDVC_inverter_setup(base, device_name, device_params)
     set_param(device_name, 'Vref', num2str(device_params.Vref));
     % DC bus capacitor in p.u.
     set_param(device_name, 'Cdc', num2str(device_params.Cdc));
+    % DC bus capacitor in p.u.
+    set_param(device_name, 'K_droop', num2str(device_params.K_droop));
 
     %{
     params.Rf = 0;
