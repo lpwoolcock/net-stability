@@ -31,27 +31,32 @@ function [] = sector_plot(x, Phi, colour)
                 sector1 = [sector1 [-pi;pi]];
                 sector_x(end+1) = x(k);
             else
-                polys{end+1} = polyshape([sector_x flip(sector_x)], [sector1(1,:) sector1(2,:)]);
-                polys{end+1} = polyshape([sector_x flip(sector_x)], [sector2(1,:) sector2(2,:)]);
+                polys{end+1} = polyshape([sector_x flip(sector_x)], [sector1(1,:) flip(sector1(2,:))]);
+                polys{end+1} = polyshape([sector_x flip(sector_x)], [sector2(1,:) flip(sector2(2,:))]);
 
                 type = 1;
                 sector1 = [-pi; pi];
                 sector_x = x(k);
             end
         else
-            beta = max(phi);
-            alpha = min(phi);
+            if wrapToPi(phi(1) - phi(2)) > 0
+                alpha = phi(1);
+                beta = phi(2);
+            else
+                alpha = phi(2);
+                beta = phi(1);
+            end
 
-            if type == 1 && (beta-alpha) < pi
+            if type == 1 && alpha > beta
                 sector1 = [sector1 [alpha;beta]];
                 sector_x(end+1) = x(k);
-            elseif type == 1 && (beta-alpha) >= pi
+            elseif type == 1 && beta >= alpha
                 polys{end+1} = polyshape([sector_x flip(sector_x)], [sector1(1,:) flip(sector1(2,:))]);
                 type = 2;
                 sector1 = [beta; pi];
                 sector2 = [-pi; alpha];
                 sector_x = x(k);
-            elseif type == 2 && (beta-alpha) < pi
+            elseif type == 2 && alpha > beta
                 polys{end+1} = polyshape([sector_x flip(sector_x)], [sector1(1,:) flip(sector1(2,:))]);
                 polys{end+1} = polyshape([sector_x flip(sector_x)], [sector2(1,:) flip(sector2(2,:))]);
                 type = 1;
